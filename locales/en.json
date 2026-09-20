@@ -46,6 +46,8 @@
     "supported_by_device": "CODEC supported by device",
     "selected_by_windows": "CODEC selected by Windows",
     "please_connect": "Please connect the device (if it's not) and click the Refresh button below to get this information.",
+    "filter_registered_reconnect": "Filter registered. Please disconnect and reconnect this device.",
+    "filter_admin_required": "No CODEC data. Re-launch as Administrator to register the driver filter.",
     "btn_refresh": "Refresh CODEC Information",
     "btn_refreshed": "Refreshed!",
     "btn_copy": "Copy CODEC information to clipboard",
