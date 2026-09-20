@@ -1,4 +1,43 @@
-# Bluetooth Tweaker - Reverse Engineering Findings & Custom GUI Implementation Guide
+# Bluetooth Tweaker Pro (Community Edition & Reverse Engineering Guide)
+
+> [!TIP]
+> **Quick Start for End Users:**  
+> If you simply want to run and use the custom **Bluetooth Tweaker GUI** to inspect audio codecs, fix volume synchronization bugs, or manage microphone muting without licensing restrictions, follow the **[Quick Start: How to Use the GUI](#quick-start-how-to-use-the-gui)** section below and **skip the rest of this document**.
+> 
+> If you are a developer, driver engineer, or security researcher interested in how Bluetooth Tweaker operates under the hood, how kernel filter drivers hook AVDTP audio negotiation, or how hexadecimal codec bitmasks are parsed, the second part of this document (**[Reverse Engineering Findings & Deep Dive](#reverse-engineering-findings--deep-dive)**) contains our complete technical analysis for study purposes.
+
+---
+
+## Quick Start: How to Use the GUI
+
+### 1. Prerequisites
+- **Operating System:** Windows 10 or Windows 11 (64-bit).
+- **Python:** Python 3.8+ installed (tested with Python 3.10 – 3.14).
+- **Underlying Driver:** Official Bluetooth Tweaker installed (from `www.bluetoothgoodies.com`).  
+  *Why:* This installs the kernel filter driver `BtTweakerFltr.sys`. You do **not** need to purchase an official license or run the official `BtTweakerUI.exe`; our community GUI talks directly to the driver and driver traces.
+
+### 2. Installation
+Open PowerShell in this project folder and install PyQt5:
+```powershell
+pip install PyQt5
+```
+
+### 3. Launching the GUI
+Run PowerShell or Command Prompt as **Administrator** (required to write hardware parameters to `HKLM:\SYSTEM\CurrentControlSet\Services\BtTweakerFltr\Parameters\UserParams`):
+```powershell
+python app.py
+```
+
+### 4. Key Features & Controls
+- **Real-Time Codec Discovery:** Completely dynamic detection of supported codecs (SBC bitpool ranges, MPEG-2/4 AAC profiles, Sony LDAC, Qualcomm aptX/aptX-HD/FastStream) sniffed from kernel traces and Windows CoreAudio endpoints. Zero hardcoded device profiles.
+- **Refresh CODEC Information:** Click to re-scan Bluetooth connection events and refresh capability lists without restarting the application.
+- **Disable Hardware Volume Control:** Check this option to force Windows software volume scaling. This permanently fixes issues where headset volume jumps uncontrollably or stays stuck at 100%.
+- **Mute Microphone:** Mutes headset microphone streams at the kernel driver filter level on HFP/HSP hands-free profiles.
+- **Multi-Language Interface:** Seamlessly switch between **English**, **Tiếng Việt**, **简体中文**, and **日本語** with immediate persistence to `config.json`.
+
+---
+
+## Reverse Engineering Findings & Deep Dive
 
 **Date:** September 20, 2026  
 **Target:** Bluetooth Tweaker v1.4.9 (Win32 Service & Kernel Filter Driver)  
@@ -23,14 +62,16 @@ This filter driver sniffs low-level AVDTP and SDP protocol packets (which normal
 
 ## Table of Contents
 
-1. [Architecture Overview](#1-architecture-overview)
-2. [Component Breakdown](#2-component-breakdown)
-3. [Kernel Driver & Service Deep Dive](#3-kernel-driver--service-deep-dive)
-4. [Registry Schema (Complete)](#4-registry-schema-complete)
-5. [Feature & Parameter Reference](#5-feature--parameter-reference)
-6. [Licensing & Activation System](#6-licensing--activation-system)
-7. [Building a Custom GUI / Alternative UI](#7-building-a-custom-gui--alternative-ui)
-8. [Useful PowerShell Commands](#8-useful-powershell-commands)
+- **[Quick Start: How to Use the GUI](#quick-start-how-to-use-the-gui)** *(For End Users)*
+- **[Reverse Engineering Analysis](#reverse-engineering-findings--deep-dive)** *(For Developers & Researchers)*
+  1. [Architecture Overview](#1-architecture-overview)
+  2. [Component Breakdown](#2-component-breakdown)
+  3. [Kernel Driver & Service Deep Dive](#3-kernel-driver--service-deep-dive)
+  4. [Registry Schema (Complete)](#4-registry-schema-complete)
+  5. [Feature & Parameter Reference (AVDTP Hex Analysis)](#5-feature--parameter-reference)
+  6. [Licensing & Activation System](#6-licensing--activation-system)
+  7. [Building a Custom GUI / Alternative UI](#7-building-a-custom-gui--alternative-ui)
+  8. [Useful PowerShell Commands](#8-useful-powershell-commands)
 
 ---
 
