@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, pyqtSignal
 from i18n import tr
-from core import BluetoothDevice, RegistryManager, ServiceMonitor, is_admin
+from core import BluetoothDevice, RegistryManager, ServiceMonitor, is_admin, ensure_filter_attached
 
 
 class DevicePanel(QScrollArea):
@@ -56,8 +56,8 @@ class DevicePanel(QScrollArea):
         self.lbl_key_addr = QLabel(tr("device_info.address"))
         self.lbl_key_addr.setProperty("class", "FieldKey")
         self.lbl_val_addr = QLabel("—")
+        self.lbl_val_addr.setObjectName("DeviceAddressValue")
         self.lbl_val_addr.setProperty("class", "FieldValue")
-        self.lbl_val_addr.setStyleSheet("font-family: Consolas, monospace;")
 
         self.lbl_key_type = QLabel(tr("device_info.type"))
         self.lbl_key_type.setProperty("class", "FieldKey")
@@ -120,7 +120,7 @@ class DevicePanel(QScrollArea):
 
         mic_row = QHBoxLayout()
         self.lbl_mic_dropdown = QLabel(tr("mic_mute.dropdown_label"))
-        self.lbl_mic_dropdown.setStyleSheet("color: #c9d1d9; font-size: 13px;")
+        self.lbl_mic_dropdown.setObjectName("MicDropdownLabel")
         self.cb_mic_mute = QComboBox()
         self.cb_mic_mute.addItem(tr("mic_mute.never"), 0)
         self.cb_mic_mute.addItem(tr("mic_mute.when_in_call"), 1)
@@ -134,7 +134,7 @@ class DevicePanel(QScrollArea):
 
         slider_row = QHBoxLayout()
         self.lbl_audible_vol = QLabel(tr("mic_mute.audible_volume"))
-        self.lbl_audible_vol.setStyleSheet("color: #8b949e; font-size: 12px;")
+        self.lbl_audible_vol.setObjectName("AudibleVolLabel")
         self.slider_audible = QSlider(Qt.Horizontal)
         self.slider_audible.setRange(0, 100)
         self.slider_audible.setValue(50)
@@ -301,9 +301,13 @@ class DevicePanel(QScrollArea):
         self.lbl_val_type.setText(device.transport_type)
 
         if device.is_connected:
-            self.lbl_val_status.setText(f"<span style='color: #3fb950; font-weight: bold;'>● {tr('device_info.connected')}</span>")
+            self.lbl_val_status.setText(f"● {tr('device_info.connected')}")
+            self.lbl_val_status.setProperty("class", "StatusConnected")
         else:
-            self.lbl_val_status.setText(f"<span style='color: #8b949e;'>○ {tr('device_info.disconnected')}</span>")
+            self.lbl_val_status.setText(f"○ {tr('device_info.disconnected')}")
+            self.lbl_val_status.setProperty("class", "StatusDisconnected")
+        self.lbl_val_status.style().unpolish(self.lbl_val_status)
+        self.lbl_val_status.style().polish(self.lbl_val_status)
 
         # Route view mode based on device category
         if device.category == "audio":
@@ -355,11 +359,16 @@ class DevicePanel(QScrollArea):
         # 3. Codec Information: Show actual info ONLY if connected!
         self._update_codec_display(device)
 
+    def _set_codec_hint(self, text: str, hint_class: str):
+        for lbl in (self.lbl_val_supported, self.lbl_val_selected):
+            lbl.setProperty("class", hint_class)
+            lbl.setText(text)
+            lbl.style().unpolish(lbl)
+            lbl.style().polish(lbl)
+
     def _update_codec_display(self, device: BluetoothDevice, force_refresh: bool = False):
         if not device.is_connected:
-            prompt_text = f"<span style='color: #8b949e; font-style: italic; font-size: 13px;'>{tr('codec.please_connect')}</span>"
-            self.lbl_val_supported.setText(prompt_text)
-            self.lbl_val_selected.setText(prompt_text)
+            self._set_codec_hint(tr("codec.please_connect"), "CodecHintMuted")
             self.btn_copy_codec.setEnabled(False)
             return
 
@@ -368,25 +377,39 @@ class DevicePanel(QScrollArea):
         selected_item = codecs.get("selected", "")
 
         if not supported_items:
-            prompt_text = f"<span style='color: #8b949e; font-style: italic; font-size: 13px;'>{tr('codec.please_connect')}</span>"
-            self.lbl_val_supported.setText(prompt_text)
-            self.lbl_val_selected.setText(prompt_text)
+            # Device is connected but no codecs found — filter may not be registered.
+            # Attempt to auto-attach BtTweakerFltr.sys as a LowerFilter for this device.
+            if is_admin():
+                changed, msg = ensure_filter_attached(device.mac)
+                if changed:
+                    # Filter was just written — device needs a reconnect
+                    self._set_codec_hint(
+                        f"⚠ {tr('codec.filter_registered_reconnect')}",
+                        "CodecHintWarning",
+                    )
+                else:
+                    # Filter was already present but trace had no data yet
+                    self._set_codec_hint(
+                        tr("codec.please_connect"),
+                        "CodecHintMuted",
+                    )
+            else:
+                self._set_codec_hint(
+                    f"⚠ {tr('codec.filter_admin_required')}",
+                    "CodecHintDanger",
+                )
             self.btn_copy_codec.setEnabled(False)
             return
 
         self.btn_copy_codec.setEnabled(True)
 
-        # Format supported list matching user's image
-        sup_html_items = []
-        for c in supported_items:
-            sup_html_items.append(
-                f"<div style='font-family: Consolas, \"Segoe UI\", monospace; font-size: 12.5px; color: #e6edf3; line-height: 1.45;'>{c}</div>"
-            )
-        self.lbl_val_supported.setText("<div style='height: 8px;'></div>".join(sup_html_items))
+        for lbl in (self.lbl_val_supported, self.lbl_val_selected):
+            lbl.setProperty("class", "CodecValue")
+            lbl.style().unpolish(lbl)
+            lbl.style().polish(lbl)
 
-        # Format selected codec matching user's image
-        html_sel = f"<div style='font-family: Consolas, \"Segoe UI\", monospace; font-size: 12.5px; color: #e6edf3; line-height: 1.45;'>{selected_item}</div>"
-        self.lbl_val_selected.setText(html_sel)
+        self.lbl_val_supported.setText("\n\n".join(supported_items))
+        self.lbl_val_selected.setText(selected_item)
 
     def _refresh_codec_info(self):
         if not self.current_device:
@@ -398,8 +421,14 @@ class DevicePanel(QScrollArea):
         # 1. Update live connection status from Windows Bluetooth stack
         connected = get_connected_bluetooth_macs()
         self.current_device.is_connected = (self.current_device.mac in connected)
-        self.lbl_val_status.setText(tr("device_info.status_connected") if self.current_device.is_connected else tr("device_info.status_disconnected"))
-        self.lbl_val_status.setStyleSheet(f"color: {'#3fb950' if self.current_device.is_connected else '#8b949e'}; font-weight: 600;")
+        if self.current_device.is_connected:
+            self.lbl_val_status.setText(f"● {tr('device_info.connected')}")
+            self.lbl_val_status.setProperty("class", "StatusConnected")
+        else:
+            self.lbl_val_status.setText(f"○ {tr('device_info.disconnected')}")
+            self.lbl_val_status.setProperty("class", "StatusDisconnected")
+        self.lbl_val_status.style().unpolish(self.lbl_val_status)
+        self.lbl_val_status.style().polish(self.lbl_val_status)
         self.current_device.refresh_params()
 
         # 2. Live re-probe kernel driver trace logs & Windows audio engine (force_refresh=True)

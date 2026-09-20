@@ -123,6 +123,56 @@ QLabel.BulletText {
     margin-left: 4px;
 }
 
+/* Device & Codec Dynamic Status / Hint Styles */
+QLabel#DeviceAddressValue {
+    font-family: Consolas, monospace;
+}
+
+QLabel#MicDropdownLabel {
+    color: #c9d1d9;
+    font-size: 13px;
+}
+
+QLabel#AudibleVolLabel {
+    color: #8b949e;
+    font-size: 12px;
+}
+
+QLabel.StatusConnected {
+    color: #3fb950;
+    font-weight: 600;
+}
+
+QLabel.StatusDisconnected {
+    color: #8b949e;
+    font-weight: 400;
+}
+
+QLabel.CodecHintMuted {
+    color: #8b949e;
+    font-style: italic;
+    font-size: 13px;
+}
+
+QLabel.CodecHintWarning {
+    color: #e3b341;
+    font-style: italic;
+    font-size: 12px;
+}
+
+QLabel.CodecHintDanger {
+    color: #f85149;
+    font-style: italic;
+    font-size: 12px;
+}
+
+QLabel.CodecValue {
+    font-family: Consolas, "Segoe UI", monospace;
+    font-size: 12.5px;
+    color: #e6edf3;
+    line-height: 1.45;
+}
+
 /* Checkbox */
 QCheckBox {
     spacing: 8px;

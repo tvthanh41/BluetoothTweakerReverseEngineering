@@ -46,6 +46,8 @@
     "supported_by_device": "デバイスがサポートするCODEC",
     "selected_by_windows": "Windowsが選択したCODEC",
     "please_connect": "デバイスを接続し（未接続の場合）、下の「更新」ボタンをクリックしてこの情報を取得してください。",
+    "filter_registered_reconnect": "フィルターが登録されました。このデバイスを切断してから再接続してください。",
+    "filter_admin_required": "CODECデータがありません。ドライバーフィルターを登録するには管理者として再起動してください。",
     "btn_refresh": "CODEC情報を更新",
     "btn_refreshed": "更新しました!",
     "btn_copy": "CODEC情報をクリップボードにコピー",

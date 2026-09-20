@@ -46,6 +46,8 @@
     "supported_by_device": "设备支持的 CODEC",
     "selected_by_windows": "Windows 选用的 CODEC",
     "please_connect": "请连接设备（若未连接），然后点击下方的刷新按钮以获取此信息。",
+    "filter_registered_reconnect": "已注册驱动过滤器。请断开并重新连接此设备。",
+    "filter_admin_required": "无编解码器数据。请以管理员身份重新运行以注册驱动程序过滤器。",
     "btn_refresh": "刷新编解码器信息",
     "btn_refreshed": "已刷新!",
     "btn_copy": "复制编解码器信息到剪贴板",

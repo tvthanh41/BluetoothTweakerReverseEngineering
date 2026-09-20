@@ -46,6 +46,8 @@
     "supported_by_device": "CODEC thiết bị hỗ trợ",
     "selected_by_windows": "CODEC Windows đã chọn",
     "please_connect": "Vui lòng kết nối thiết bị (nếu chưa kết nối) và bấm nút Làm mới bên dưới để lấy thông tin này.",
+    "filter_registered_reconnect": "Đã đăng ký driver filter. Vui lòng ngắt kết nối và kết nối lại thiết bị này.",
+    "filter_admin_required": "Không có dữ liệu CODEC. Vui lòng chạy lại với quyền Quản trị viên (Administrator) để đăng ký driver filter.",
     "btn_refresh": "Làm mới thông tin CODEC",
     "btn_refreshed": "Đã làm mới!",
     "btn_copy": "Sao chép thông tin CODEC vào khay nhớ tạm",
