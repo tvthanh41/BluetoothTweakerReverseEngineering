@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "Bluetooth Tweaker Pro",
+    "subtitle": "蓝牙音频诊断与内核过滤驱动控制器",
+    "version": "v1.5.0",
+    "unlicensed_badge": "完全解锁",
+    "admin_badge": "管理员权限",
+    "non_admin_badge": "只读模式 (以管理员身份运行以保存)",
+    "elevate_button": "以管理员身份运行"
+  },
+  "sidebar": {
+    "select_prompt": "请选择要配置的设备:",
+    "common_settings": "[所有设备的通用设置]",
+    "connected_dot": "已连接",
+    "disconnected_dot": "已配对"
+  },
+  "device_info": {
+    "title": "[设备信息]",
+    "name": "设备名称",
+    "address": "蓝牙设备地址",
+    "type": "设备类型",
+    "status": "连接状态",
+    "connected": "已连接",
+    "disconnected": "未连接"
+  },
+  "volume_control": {
+    "title": "[立体声音频音量控制]",
+    "claim_support": "• 此设备声称支持硬件音量控制。",
+    "claim_no_support": "• 此设备不支持硬件音量控制。",
+    "using_hw": "• Windows 正在使用此设备的硬件音量控制。",
+    "using_sw": "• Windows 正在对此设备使用软件音量控制。",
+    "checkbox": "强制 Windows 不使用此设备的硬件音量控制",
+    "what_is_this": "[这是什么?]"
+  },
+  "mic_mute": {
+    "title": "[耳机麦克风静音控制]",
+    "dropdown_label": "使用耳机的暂停/停止/播放按键静音麦克风:",
+    "never": "从不",
+    "when_in_call": "通话时",
+    "always": "始终",
+    "audible_volume": "提示音量:",
+    "what_is_this": "[这是什么?]"
+  },
+  "codec": {
+    "title": "[立体声音频 (A2DP) CODEC 信息]",
+    "supported_by_device": "设备支持的 CODEC",
+    "selected_by_windows": "Windows 选用的 CODEC",
+    "please_connect": "请连接设备（若未连接），然后点击下方的刷新按钮以获取此信息。",
+    "btn_refresh": "刷新编解码器信息",
+    "btn_refreshed": "已刷新!",
+    "btn_copy": "复制编解码器信息到剪贴板",
+    "btn_copied": "已复制！"
+  },
+  "a2dp_sink": {
+    "title": "[允许从此设备接收立体声音频 (A2DP)]",
+    "checkbox": "允许此设备连接为音频源",
+    "desc": "此功能可让电脑充当蓝牙音箱，接收来自手机或平板的音频串流。",
+    "what_is_this": "[这是什么?]"
+  },
+  "peripheral": {
+    "no_tweak": "此优化选项不适用于此设备。",
+    "desc": "此设备是蓝牙外设 ({type})，不支持立体声音频 (A2DP) 或耳机功能。"
+  },
+  "common": {
+    "title": "[所有设备的通用设置]",
+    "avrcp_title": "[远程控制 (AVRCP) 行为]",
+    "avrcp_checkbox": "使用 AVRCP 按键控制传统媒体应用",
+    "avrcp_desc": "将耳机上的按键转发给传统桌面媒体播放器 (foobar2000, VLC, MPC-HC)。",
+    "service_title": "[BtTweaker 服务与内核驱动状态]",
+    "btn_restart_service": "重启服务",
+    "btn_start_service": "启动服务"
+  },
+  "service_bar": {
+    "btn_refresh": "刷新",
+    "language": "语言"
+  },
+  "messages": {
+    "saved": "已成功为 {mac} 保存注册表设置。",
+    "save_error": "保存注册表失败: {error}",
+    "admin_needed": "修改并保存注册表需要管理员权限。"
+  }
+}

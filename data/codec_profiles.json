@@ -1,0 +1,16 @@
+{
+  "b4e7b3b6ebe8": {
+    "supported": [
+      "CODEC Type: SBC, Sampling Frequency: 16/32/44.1/48kHz, Channel Mode: Mono/Dual Channel/Stereo/Joint Stereo, Block Length: 4/8/12/16, Subbands: 4/8, Allocation Method: SNR/Loudness, Min/Max Bitpool: 2/38"
+    ],
+    "selected": "CODEC Type: SBC, Sampling Frequency: 44.1kHz, Channel Mode: Joint Stereo, Block Length: 16, Subbands: 8, Allocation Method: Loudness, Min/Max Bitpool: 2/38"
+  },
+  "eff6a4da6051": {
+    "supported": [
+      "CODEC Type: SBC, Sampling Frequency: 16/32/44.1/48kHz, Channel Mode: Mono/Dual Channel/Stereo/Joint Stereo, Block Length: 4/8/12/16, Subbands: 4/8, Allocation Method: SNR/Loudness, Min/Max Bitpool: 2/38",
+      "CODEC Type: MPEG-2, 4 AAC, Object Type: MPEG-2 AAC LC, Sampling Frequency: 44.1/48kHz, Channels: 1/2, VBR: supported, Bit rate: 131072",
+      "CODEC Type: LDAC, Sampling Frequency: 44.1/48/88.2/96kHz, Channel Mode: Stereo/Dual/Mono"
+    ],
+    "selected": "CODEC Type: SBC, Sampling Frequency: 44.1kHz, Channel Mode: Joint Stereo, Block Length: 4, Subbands: 8, Allocation Method: Loudness, Min/Max Bitpool: 2/38"
+  }
+}

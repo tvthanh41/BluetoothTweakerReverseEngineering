@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "Bluetooth Tweaker Pro",
+    "subtitle": "Audio Diagnostics & Kernel Filter Controller",
+    "version": "v1.5.0",
+    "unlicensed_badge": "Full Unlocked",
+    "admin_badge": "Administrator",
+    "non_admin_badge": "Read-Only (Run as Admin to save)",
+    "elevate_button": "Run as Administrator"
+  },
+  "sidebar": {
+    "select_prompt": "Please select a device to tweak:",
+    "common_settings": "[Common settings for all devices]",
+    "connected_dot": "Connected",
+    "disconnected_dot": "Disconnected"
+  },
+  "device_info": {
+    "title": "[Device Information]",
+    "name": "Name",
+    "address": "Bluetooth Device Address",
+    "type": "Device Type",
+    "status": "Connection Status",
+    "connected": "Connected",
+    "disconnected": "Disconnected"
+  },
+  "volume_control": {
+    "title": "[Stereo Audio Volume Control]",
+    "claim_support": "• This device claims that it supports hardware volume control.",
+    "claim_no_support": "• This device does not support hardware volume control.",
+    "using_hw": "• Windows is using this device's hardware volume control.",
+    "using_sw": "• Windows is using software volume control for this device.",
+    "checkbox": "Force Windows not to use this device's hardware volume control",
+    "what_is_this": "[What is this?]"
+  },
+  "mic_mute": {
+    "title": "[Headset Microphone Mute Control]",
+    "dropdown_label": "Use headset's pause/stop/play buttons to mute its microphone:",
+    "never": "Never",
+    "when_in_call": "When in call",
+    "always": "Always",
+    "audible_volume": "Audible indicator volume:",
+    "what_is_this": "[What is this?]"
+  },
+  "codec": {
+    "title": "[Stereo Audio (A2DP) CODEC Information]",
+    "supported_by_device": "CODEC supported by device",
+    "selected_by_windows": "CODEC selected by Windows",
+    "please_connect": "Please connect the device (if it's not) and click the Refresh button below to get this information.",
+    "btn_refresh": "Refresh CODEC Information",
+    "btn_refreshed": "Refreshed!",
+    "btn_copy": "Copy CODEC information to clipboard",
+    "btn_copied": "Copied!"
+  },
+  "a2dp_sink": {
+    "title": "[Accept Stereo Audio (A2DP) Playback From This Device]",
+    "checkbox": "Allow this device to connect",
+    "desc": "This feature allows your PC to act as a wireless Bluetooth speaker receiving audio from this phone or tablet.",
+    "what_is_this": "[What is this?]"
+  },
+  "peripheral": {
+    "no_tweak": "This tweak does not apply to this device.",
+    "desc": "This device is a Bluetooth peripheral ({type}) and does not support stereo audio (A2DP) or headset features."
+  },
+  "common": {
+    "title": "[Common settings for all devices]",
+    "avrcp_title": "[Remote Control (AVRCP) Behavior]",
+    "avrcp_checkbox": "Control legacy apps with AVRCP buttons",
+    "avrcp_desc": "Routes headphone playback buttons (Play, Pause, Next, Prev, Stop) through system transport proxy so legacy desktop media players (foobar2000, VLC, MPC-HC) respond.",
+    "service_title": "[BtTweaker Service & Kernel Filter Status]",
+    "btn_restart_service": "Restart Service",
+    "btn_start_service": "Start Service"
+  },
+  "service_bar": {
+    "btn_refresh": "Refresh",
+    "language": "Language"
+  },
+  "messages": {
+    "saved": "Settings saved successfully to registry for {mac}.",
+    "save_error": "Failed to save registry parameters: {error}",
+    "admin_needed": "Administrator privileges are required to save changes to Windows registry."
+  }
+}

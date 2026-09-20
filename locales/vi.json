@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "Bluetooth Tweaker Pro",
+    "subtitle": "Chẩn Đoán Âm Thanh & Bộ Điều Khiển Driver Kernel Filter",
+    "version": "v1.5.0",
+    "unlicensed_badge": "Đã Mở Khóa Đầy Đủ",
+    "admin_badge": "Quản Trị Viên",
+    "non_admin_badge": "Chỉ Đọc (Cần quyền Admin để lưu)",
+    "elevate_button": "Khởi Chạy Quyền Admin"
+  },
+  "sidebar": {
+    "select_prompt": "Vui lòng chọn một thiết bị để cấu hình:",
+    "common_settings": "[Cài đặt chung cho tất cả thiết bị]",
+    "connected_dot": "Đang kết nối",
+    "disconnected_dot": "Đã ghép đôi"
+  },
+  "device_info": {
+    "title": "[Thông Tin Thiết Bị]",
+    "name": "Tên Thiết Bị",
+    "address": "Địa Chỉ MAC Bluetooth",
+    "type": "Loại Thiết Bị",
+    "status": "Trạng Thái Kết Nối",
+    "connected": "Đang kết nối",
+    "disconnected": "Chưa kết nối"
+  },
+  "volume_control": {
+    "title": "[Điều Khiển Âm Lượng Âm Thanh Stereo]",
+    "claim_support": "• Thiết bị này xác nhận có hỗ trợ điều khiển âm lượng phần cứng.",
+    "claim_no_support": "• Thiết bị này không hỗ trợ điều khiển âm lượng phần cứng.",
+    "using_hw": "• Windows đang sử dụng điều khiển âm lượng phần cứng của thiết bị này.",
+    "using_sw": "• Windows đang sử dụng điều khiển âm lượng phần mềm cho thiết bị này.",
+    "checkbox": "Bắt buộc Windows không dùng điều khiển âm lượng phần cứng của thiết bị này",
+    "what_is_this": "[Đây là gì?]"
+  },
+  "mic_mute": {
+    "title": "[Điều Khiển Tắt Tiếng Micro Tai Nghe]",
+    "dropdown_label": "Sử dụng nút pause/stop/play của tai nghe để tắt mic:",
+    "never": "Không bao giờ",
+    "when_in_call": "Khi đang trong cuộc gọi",
+    "always": "Luôn luôn",
+    "audible_volume": "Âm lượng âm báo hiệu:",
+    "what_is_this": "[Đây là gì?]"
+  },
+  "codec": {
+    "title": "[Thông Tin CODEC Âm Thanh Stereo (A2DP)]",
+    "supported_by_device": "CODEC thiết bị hỗ trợ",
+    "selected_by_windows": "CODEC Windows đã chọn",
+    "please_connect": "Vui lòng kết nối thiết bị (nếu chưa kết nối) và bấm nút Làm mới bên dưới để lấy thông tin này.",
+    "btn_refresh": "Làm mới thông tin CODEC",
+    "btn_refreshed": "Đã làm mới!",
+    "btn_copy": "Sao chép thông tin CODEC vào khay nhớ tạm",
+    "btn_copied": "Đã sao chép!"
+  },
+  "a2dp_sink": {
+    "title": "[Tiếp Nhận Phát Âm Thanh Stereo (A2DP) Từ Thiết Bị Này]",
+    "checkbox": "Cho phép thiết bị này kết nối làm nguồn âm thanh",
+    "desc": "Tính năng này cho phép máy tính hoạt động như một chiếc loa không dây Bluetooth tiếp nhận âm thanh từ điện thoại hoặc máy tính bảng.",
+    "what_is_this": "[Đây là gì?]"
+  },
+  "peripheral": {
+    "no_tweak": "Tùy chỉnh này không áp dụng cho thiết bị này.",
+    "desc": "Thiết bị này là phụ kiện ngoại vi Bluetooth ({type}) và không hỗ trợ âm thanh stereo (A2DP) hoặc tính năng tai nghe."
+  },
+  "common": {
+    "title": "[Cài đặt chung cho tất cả thiết bị]",
+    "avrcp_title": "[Hành Vi Điều Khiển Từ Xa (AVRCP)]",
+    "avrcp_checkbox": "Điều khiển các ứng dụng đa phương tiện truyền thống bằng nút AVRCP",
+    "avrcp_desc": "Định tuyến các nút bấm trên tai nghe (Phát, Tạm dừng, Tiếp, Trước) qua proxy hệ thống để các ứng dụng cổ điển (foobar2000, VLC, MPC-HC) có thể nhận nút bấm.",
+    "service_title": "[Trạng Thái Dịch Vụ BtTweaker & Kernel Filter]",
+    "btn_restart_service": "Khởi Động Lại Dịch Vụ",
+    "btn_start_service": "Bắt Đầu Dịch Vụ"
+  },
+  "service_bar": {
+    "btn_refresh": "Làm mới",
+    "language": "Ngôn ngữ"
+  },
+  "messages": {
+    "saved": "Đã lưu cài đặt registry thành công cho {mac}.",
+    "save_error": "Lỗi khi lưu registry: {error}",
+    "admin_needed": "Cần quyền Quản trị viên (Administrator) để lưu thay đổi vào Windows registry."
+  }
+}

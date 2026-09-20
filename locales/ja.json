@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "Bluetooth Tweaker Pro",
+    "subtitle": "オーディオ診断＆カーネルフィルタ制御",
+    "version": "v1.5.0",
+    "unlicensed_badge": "完全ロック解除",
+    "admin_badge": "管理者権限",
+    "non_admin_badge": "読み取り専用 (保存には管理者として実行)",
+    "elevate_button": "管理者として実行"
+  },
+  "sidebar": {
+    "select_prompt": "設定するデバイスを選択してください:",
+    "common_settings": "[すべてのデバイスの共通設定]",
+    "connected_dot": "接続中",
+    "disconnected_dot": "ペアリング済み"
+  },
+  "device_info": {
+    "title": "[デバイス情報]",
+    "name": "名前",
+    "address": "Bluetoothデバイスアドレス",
+    "type": "デバイス種別",
+    "status": "接続状態",
+    "connected": "接続中",
+    "disconnected": "未接続"
+  },
+  "volume_control": {
+    "title": "[ステレオオーディオ音量コントロール]",
+    "claim_support": "• このデバイスはハードウェア音量調整に対応しています。",
+    "claim_no_support": "• このデバイスはハードウェア音量調整に対応していません。",
+    "using_hw": "• Windowsはこのデバイスのハードウェア音量調整を使用しています。",
+    "using_sw": "• Windowsはこのデバイスのソフトウェア音量調整を使用しています。",
+    "checkbox": "Windowsがこのデバイスのハードウェア音量調整を使用しないように強制する",
+    "what_is_this": "[これは何ですか?]"
+  },
+  "mic_mute": {
+    "title": "[ヘッドセットマイクミュート制御]",
+    "dropdown_label": "ヘッドセットの再生/停止ボタンでマイクをミュート:",
+    "never": "しない",
+    "when_in_call": "通話時のみ",
+    "always": "常に",
+    "audible_volume": "通知音量:",
+    "what_is_this": "[これは何ですか?]"
+  },
+  "codec": {
+    "title": "[ステレオオーディオ (A2DP) CODEC 情報]",
+    "supported_by_device": "デバイスがサポートするCODEC",
+    "selected_by_windows": "Windowsが選択したCODEC",
+    "please_connect": "デバイスを接続し（未接続の場合）、下の「更新」ボタンをクリックしてこの情報を取得してください。",
+    "btn_refresh": "CODEC情報を更新",
+    "btn_refreshed": "更新しました!",
+    "btn_copy": "CODEC情報をクリップボードにコピー",
+    "btn_copied": "コピーしました！"
+  },
+  "a2dp_sink": {
+    "title": "[このデバイスからのステレオオーディオ (A2DP) 再生を許可]",
+    "checkbox": "このデバイスの音声接続を許可する",
+    "desc": "PCをBluetoothスピーカーとして機能させ、スマートフォン等の音声を再生します。",
+    "what_is_this": "[これは何ですか?]"
+  },
+  "peripheral": {
+    "no_tweak": "この設定はこのデバイスには適用されません。",
+    "desc": "このデバイスはBluetooth周辺機器 ({type}) であり、ステレオオーディオ (A2DP) やヘッドセット機能には対応していません。"
+  },
+  "common": {
+    "title": "[すべてのデバイスの共通設定]",
+    "avrcp_title": "[リモートコントロール (AVRCP) の動作]",
+    "avrcp_checkbox": "AVRCPボタンで従来のメディアアプリを操作する",
+    "avrcp_desc": "ヘッドホンの操作ボタンを従来のメディアプレーヤー (foobar2000, VLC, MPC-HC) に転送します。",
+    "service_title": "[BtTweaker サービス＆カーネルフィルタの状態]",
+    "btn_restart_service": "サービスを再起動",
+    "btn_start_service": "サービスを開始"
+  },
+  "service_bar": {
+    "btn_refresh": "更新",
+    "language": "言語"
+  },
+  "messages": {
+    "saved": "{mac} のレジストリ設定を保存しました。",
+    "save_error": "レジストリ保存に失敗しました: {error}",
+    "admin_needed": "レジストリ設定を変更するには管理者権限が必要です。"
+  }
+}
