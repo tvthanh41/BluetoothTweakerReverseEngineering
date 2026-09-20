@@ -1,10 +1,125 @@
 import winreg
 import ctypes
 from ctypes import wintypes
-from typing import List, Dict, Any, Optional, Set
+from typing import List, Dict, Any, Optional, Set, Tuple
 from .registry_manager import normalize_mac, format_mac, RegistryManager
 
 REG_BTHPORT_DEVICES = r"SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters\Devices"
+
+# Hardware IDs on which BtTweakerFltr.sys operates as a LowerFilter.
+# The service (BtTweakerSvc.exe) normally writes LowerFilters on each
+# device instance after pairing. If the service is dead, we replicate
+# that behaviour in ensure_filter_attached().
+_BTHENUM_FILTER_PROFILES = [
+    r"BTHENUM\{0000110b-0000-1000-8000-00805f9b34fb}",  # A2DP Audio Sink
+    r"BTHENUM\{0000110c-0000-1000-8000-00805f9b34fb}",  # AVRCP Target
+    r"BTHENUM\{0000110e-0000-1000-8000-00805f9b34fb}",  # AVRCP Controller
+]
+_FILTER_DRIVER_NAME = "BtTweakerFltr"
+
+
+def ensure_filter_attached(mac: str) -> Tuple[bool, str]:
+    """
+    Ensures BtTweakerFltr.sys is registered as a LowerFilter for all
+    relevant BTHENUM PnP device instances that match the given MAC address.
+
+    Normally BtTweakerSvc.exe handles this when a new device is paired.
+    If the service is dead or expired, this function replicates that
+    behaviour so the kernel driver can sniff AVDTP codec frames for
+    newly-paired devices.
+
+    Returns:
+        (changed: bool, message: str)
+        changed=True  → at least one instance was updated (device reconnect required).
+        changed=False → all instances already had the filter, nothing changed.
+
+    Requires admin rights (write access to HKLM\\SYSTEM\\CurrentControlSet\\Enum).
+    """
+    mac_norm = normalize_mac(mac).upper()
+    base_enum = r"SYSTEM\CurrentControlSet\Enum"
+    patched: List[str] = []
+    already_ok: List[str] = []
+    errors: List[str] = []
+
+    for profile_prefix in _BTHENUM_FILTER_PROFILES:
+        try:
+            k_profile = winreg.OpenKey(
+                winreg.HKEY_LOCAL_MACHINE,
+                f"{base_enum}\\{profile_prefix}",
+                0,
+                winreg.KEY_READ,
+            )
+        except FileNotFoundError:
+            continue
+
+        num_vid = winreg.QueryInfoKey(k_profile)[0]
+        for i in range(num_vid):
+            vid_key_name = winreg.EnumKey(k_profile, i)
+            try:
+                k_vid = winreg.OpenKey(k_profile, vid_key_name, 0, winreg.KEY_READ)
+                num_inst = winreg.QueryInfoKey(k_vid)[0]
+                for j in range(num_inst):
+                    inst_name = winreg.EnumKey(k_vid, j)
+                    # Instance names embed the MAC at the end, e.g.
+                    # "b&62612bf&0&EFF6A4DA6051_C00000000"
+                    if mac_norm not in inst_name.upper():
+                        continue
+
+                    inst_path = (
+                        f"{base_enum}\\{profile_prefix}\\{vid_key_name}\\{inst_name}"
+                    )
+
+                    # Read current LowerFilters
+                    try:
+                        k_inst = winreg.OpenKey(
+                            winreg.HKEY_LOCAL_MACHINE, inst_path, 0, winreg.KEY_READ
+                        )
+                        try:
+                            existing, _ = winreg.QueryValueEx(k_inst, "LowerFilters")
+                        except FileNotFoundError:
+                            existing = []
+                        winreg.CloseKey(k_inst)
+                    except Exception:
+                        existing = []
+
+                    if _FILTER_DRIVER_NAME in existing:
+                        already_ok.append(inst_name)
+                        continue
+
+                    # Write LowerFilters (requires admin / HKLM write access)
+                    try:
+                        k_inst_w = winreg.OpenKey(
+                            winreg.HKEY_LOCAL_MACHINE,
+                            inst_path,
+                            0,
+                            winreg.KEY_SET_VALUE,
+                        )
+                        new_val = list(existing) + [_FILTER_DRIVER_NAME]
+                        winreg.SetValueEx(
+                            k_inst_w, "LowerFilters", 0, winreg.REG_MULTI_SZ, new_val
+                        )
+                        winreg.CloseKey(k_inst_w)
+                        patched.append(inst_name)
+                    except PermissionError:
+                        errors.append(f"No write access to {inst_path!r}. Run as admin.")
+                    except Exception as e:
+                        errors.append(f"{inst_name}: {e}")
+
+                winreg.CloseKey(k_vid)
+            except Exception:
+                pass
+        winreg.CloseKey(k_profile)
+
+    if errors:
+        return False, "; ".join(errors)
+    if patched:
+        return True, (
+            f"Filter registered on {len(patched)} instance(s) for {mac_norm}. "
+            "Please disconnect and reconnect the device for the driver to attach."
+        )
+    return False, (
+        f"Filter already present on all {len(already_ok)} instance(s) for {mac_norm}. No action needed."
+    )
 
 
 class SYSTEMTIME(ctypes.Structure):

@@ -35,6 +35,38 @@ python app.py
 - **Mute Microphone:** Mutes headset microphone streams at the kernel driver filter level on HFP/HSP hands-free profiles.
 - **Multi-Language Interface:** Seamlessly switch between **English**, **Tiếng Việt**, **简体中文**, and **日本語** with immediate persistence to `config.json`.
 
+### 5. Troubleshooting
+
+#### Codec info missing for a newly-paired device
+
+> [!IMPORTANT]
+> The kernel filter driver `BtTweakerFltr.sys` is registered **per device instance** (not globally). Normally `BtTweakerSvc.exe` writes this entry automatically when a new device is paired. If that service is stopped, expired, or otherwise unavailable, a brand-new device may not get the filter attached — so the GUI cannot sniff its AVDTP codec frames.
+
+**How we handle this automatically:**  
+Our GUI calls `ensure_filter_attached(mac)` (see [`core/device_manager.py`](core/device_manager.py)) whenever it detects a device with no codec information. This function:
+1. Walks all relevant BTHENUM PnP device instances under `HKLM\SYSTEM\CurrentControlSet\Enum\BTHENUM\` that match the device's MAC address.
+2. Checks whether `BtTweakerFltr` is present in each instance's `LowerFilters` (`REG_MULTI_SZ`) value.
+3. If missing, writes the entry (requires the app to be running as **Administrator**).
+4. Returns a message instructing the user to **disconnect and reconnect** the device so Windows re-loads the driver stack with the filter now attached.
+
+**Manual fix (PowerShell, if needed):**
+```powershell
+# Replace the instance path with the actual one from your system
+$inst = "HKLM:\SYSTEM\CurrentControlSet\Enum\BTHENUM\{0000110b-0000-1000-8000-00805f9b34fb}_VID&...\_YourMAC_C00000000"
+$existing = (Get-ItemProperty $inst -Name LowerFilters -EA SilentlyContinue).LowerFilters
+if ("BtTweakerFltr" -notin $existing) {
+    Set-ItemProperty $inst -Name LowerFilters -Value (@($existing) + "BtTweakerFltr") -Type MultiString
+    Write-Host "Done — disconnect and reconnect the device."
+}
+```
+
+| Scenario | Effect | Resolution |
+|----------|--------|------------|
+| Device previously paired, service stopped | ✅ Filter already in registry — works fine | None needed |
+| **New device paired, service dead** | ⚠️ Filter entry missing — no codec sniff | GUI auto-fixes via `ensure_filter_attached()` |
+| `BtTweakerFltr.sys` driver uninstalled | ❌ Driver not loaded at all | Re-install Bluetooth Tweaker |
+| App not running as Administrator | ❌ Cannot write to `HKLM\Enum` | Re-launch as Administrator |
+
 ---
 
 ## Reverse Engineering Findings & Deep Dive
@@ -614,8 +646,9 @@ signature:05729830c98aedfd75b5864f58a0375716a1ae73e619020493a132fa5d208ae777b8..
 ### Key Security Notes
 
 1. **Kernel Driver Has No License Check:** `BtTweakerFltr.sys` does **not** check or enforce licensing. It reads `UserParams` from the registry and filters Bluetooth packets unconditionally.
-2. **License Check Location:** Licensing is enforced purely inside `BtTweakerUI.exe` and `BtTweakerSvc.exe` via Windows BCrypt API (`BCryptImportKeyPair`, `RSAPUBLICBLOB`).
+2. **License Check Location:** Licensing is enforced purely inside `BtTweakerUI.exe` and `BtTweakerSvc.exe` via Windows BCrypt API (`BCryptImportKeyPair`, `RSAPUBLICBLOB`). Specifically, `BtTweakerSvc.exe` enforces licensing only for **features exposed through `BtTweakerUI.exe`** (the official UI). It does **not** block the kernel driver from operating. `BtTweakerSvc.exe` also manages automatic `LowerFilters` registration for newly-paired Bluetooth devices — but once a device's filter entry exists in the registry, the kernel driver continues functioning regardless of whether the service is running, expired, or stopped.
 3. **Custom GUI / Alternative UI:** Because the kernel driver and service consume simple DWORD registry values under `UserParams`, any custom application can manage Bluetooth Tweaker features (Hardware Volume override, Mic Mute, Codec querying) by interacting directly with the registry without needing `BtTweakerUI.exe` or a paid license.
+4. **New Device Paired When Service Is Dead:** `BtTweakerFltr.sys` is registered as a `LowerFilter` **per device instance** (confirmed from live registry inspection of `HKLM\SYSTEM\CurrentControlSet\Enum\BTHENUM\...\LowerFilters`). `BtTweakerSvc.exe` normally writes this entry at pairing time. If the service is unavailable, the filter won't be attached to new devices automatically. Our custom GUI resolves this via `ensure_filter_attached(mac)` in [`core/device_manager.py`](core/device_manager.py), which walks all matching BTHENUM PnP instances, checks each instance's `LowerFilters` value, and writes the `BtTweakerFltr` entry if missing (requires admin). After the entry is written, the user must disconnect and reconnect the device for Windows to reload the driver stack with the filter attached.
 
 ---
 
